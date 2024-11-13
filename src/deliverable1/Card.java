@@ -1,15 +1,12 @@
-/**
- * SYST 17796 Project Base code.
- * Students can modify and extend to implement their game.
- * Add your name as an author and the date!
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package ca.sheridancollege.project;
+package deliverable1;
 
 /**
- * A class to be used as the base Card class for the project. 
- * Must be general enough to be instantiated for any Cardgame. 
- * Students wishing to add to the code should remember to add themselves as a modifier.
  *
+ * @author vbvir
  */
 public class Card {
     
@@ -42,4 +39,6 @@ public class Card {
         return rank + " of " + suit;
     }
 
+    
+    
 }
