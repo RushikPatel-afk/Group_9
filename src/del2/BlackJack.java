@@ -15,65 +15,42 @@ public class BlackJack {
      * @param args the command line arguments
      */
     
-    private Deck deck;
-    private Hand playerHand;
-    private Hand dealerHand;
+     private final Deck deck;
+    private final Hand playerHand;
+    private final Hand dealerHand;
 
     public BlackJack() {
-        deck = new Deck();
-        playerHand = new Hand();
-        dealerHand = new Hand();
+        this.deck = new Deck();
+        this.playerHand = new Hand();
+        this.dealerHand = new Hand();
     }
-    
-    public void dealInitialCards(){
-        playerHand.addCard(deck.deal());
-        playerHand.addCard(deck.deal());
-        dealerHand.addCard(deck.deal());
-        dealerHand.addCard(deck.deal());
+
+    private void dealInitialCards() {
+        playerHand.addCard(deck.dealCard());
+        playerHand.addCard(deck.dealCard());
+        dealerHand.addCard(deck.dealCard());
+        dealerHand.addCard(deck.dealCard());
     }
-    
-    public void playerHit(){
-        playerHand.addCard(deck.deal());
+
+    private boolean isBusted(Hand hand) {
+        return hand.getValue() > 21;
     }
-    
-    public void dealerHit(){
-        dealerHand.addCard(deck.deal());
+
+    private void printHand(Hand hand, String owner) {
+        System.out.println(owner + "'s Hand:");
+        System.out.println(hand);
+        System.out.println(owner + "'s Total Value: " + hand.getValue());
     }
-    
-    public boolean playerBusted(){
-        return playerHand.getValue() > 21;
-    }
-    
-    public boolean dealerBusted(){
-        return dealerHand.getValue() > 21;
-    }
-    
-    public boolean playerWins(){
-        return playerHand.getValue() <= 21 && playerHand.getValue() > dealerHand.getValue();    
-    }
-    
-    public boolean dealerWins(){
-        return dealerHand.getValue() <= 21 && dealerHand.getValue() > playerHand.getValue();    
-    }
-    
-    public boolean push(){
-        return playerHand.getValue() == dealerHand.getValue();
-    }
-    
+
     public void play() {
         dealInitialCards();
         Scanner scanner = new Scanner(System.in);
-        boolean playerTurn = true;
 
-        while (playerTurn) {
-            System.out.println("Player's hand:");
-            System.out.println(playerHand);
-            System.out.println("Player's hand value: " + playerHand.getValue());
-//            System.out.println("Dealer's hand:");
-//            System.out.println(dealerHand);
-//            System.out.println("Dealer's hand value: " + dealerHand.getValue());
+        // Player's turn
+        while (true) {
+            printHand(playerHand, "Player");
 
-            if (playerBusted()) {
+            if (isBusted(playerHand)) {
                 System.out.println("Player busts! Dealer wins.");
                 return;
             }
@@ -82,53 +59,39 @@ public class BlackJack {
             String decision = scanner.nextLine();
 
             if ("hit".equalsIgnoreCase(decision)) {
-                playerHit();
+                playerHand.addCard(deck.dealCard());
             } 
-            
             else if ("stand".equalsIgnoreCase(decision)) {
-                playerTurn = false;
-            } 
-            
-            else {
+                break;
+            } else {
                 System.out.println("Invalid input. Please type 'hit' or 'stand'.");
             }
         }
 
+        // Dealer's turn
         while (dealerHand.getValue() < 17) {
-            dealerHit();
+            dealerHand.addCard(deck.dealCard());
         }
 
-        System.out.println("Final hands:");
-        System.out.println("Player's hand:");
-        System.out.println(playerHand);
-        System.out.println("Player's hand value: " + playerHand.getValue());
-        System.out.println("Dealer's hand:");
-        System.out.println(dealerHand);
-        System.out.println("Dealer's hand value: " + dealerHand.getValue());
+        // Results
+        printHand(playerHand, "Player");
+        printHand(dealerHand, "Dealer");
 
-        if (dealerBusted()) {
+        if (isBusted(dealerHand)) {
             System.out.println("Dealer busts! Player wins.");
         } 
-        
-        else if (playerWins()) {
+        else if (playerHand.getValue() > dealerHand.getValue()) {
             System.out.println("Player wins!");
-        } 
-        
-        else if (dealerWins()) {
+        }
+        else if (playerHand.getValue() < dealerHand.getValue()) {
             System.out.println("Dealer wins!");
-        } 
-        
-        else if (push()) {
+        }
+        else {
             System.out.println("It's a push!");
         }
     }
-    
-    
+
     public static void main(String[] args) {
-        // TODO code application logic here
-        
-        BlackJack game = new BlackJack();
-        game.play();
+        new BlackJack().play();
     }
-    
 }

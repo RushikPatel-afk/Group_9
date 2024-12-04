@@ -15,89 +15,58 @@ import java.util.List;
  * @author vbvir
  */
 public class Hand {
-    
-    private List<Card> cards;
+    private final List<Card> cards;
 
     public Hand() {
-        cards = new ArrayList<>();
+        this.cards = new ArrayList<>();
     }
-    
-    public void addCard(Card card){
+
+    public void addCard(Card card) {
         cards.add(card);
     }
+
     
-    public int getValue(){
+    
+    //Calculates the total value of the hand, considering Aces as 1 or 11.  
+    public int getValue() {
         int value = 0;
         int aceCount = 0;
-        
+
         for (Card card : cards) {
-            String rank = card.getRank();
-            
-            if("2".equals(rank)){
-                value += 2;
-            }
-            
-            else if("3".equals(rank)){
-                value += 3;
-            }
-            
-            else if("4".equals(rank)){
-                value += 4;
-            }
-            
-            else if("5".equals(rank)){
-                value += 5;
-            }
-            
-            else if("6".equals(rank)){
-                value += 6;
-            }
-            
-            else if("7".equals(rank)){
-                value += 7;
-            }
-            
-            else if("8".equals(rank)){
-                value += 8;
-            }
-            
-            else if("9".equals(rank)){
-                value += 9;
-            }
-            
-            else if("10".equals(rank) || "Jack".equals(rank) || "Queen".equals(rank) || "King".equals(rank)){
-                value += 10;
-            }
-            
-            else if("Ace".equals(rank)){
-                value += 11;
+            value += getCardValue(card);
+            if ("Ace".equals(card.getRank())) {
                 aceCount++;
             }
         }
-        
-        while (value > 21 && aceCount > 0){
+
+        // Adjust Ace values if the total exceeds 21
+        while (value > 21 && aceCount > 0) {
             value -= 10;
             aceCount--;
         }
-        
+
         return value;
+    }
+
+    private int getCardValue(Card card) {
+        switch (card.getRank()) {
+            case "Jack":
+            case "Queen":
+            case "King":
+                return 10;
+            case "Ace":
+                return 11;
+            default:
+                return Integer.parseInt(card.getRank());
+        }
     }
 
     @Override
     public String toString() {
-        
-        StringBuilder handString = new StringBuilder();
-        
+        StringBuilder sb = new StringBuilder();
         for (Card card : cards) {
-            handString.append(card.toString()).append("\n"); 
+            sb.append(card).append("\n");
         }
-       
-        return handString.toString();
+        return sb.toString();
     }
-    
-    
-    
-    
-    
-    
 }
